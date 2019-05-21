@@ -37,7 +37,7 @@ namespace shop {
         }
 
         std::string info() override {
-            return Commodity::info() + " " +  std::to_string(bail);
+            return Commodity::info() + " " + std::to_string(bail);
         }
 
         bool read(std::istream &stream) override;

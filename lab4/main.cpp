@@ -24,7 +24,7 @@ int main() {
             new Service("service", Date(10, 10, 10), 50.0, 2.0)
     };
 
-    for(auto& product : products) {
+    for (auto &product : products) {
         cout << endl << "info: " << product->info() << endl;
         cout << "get_price: " << product->get_price() << endl;
         product->write(cout);
