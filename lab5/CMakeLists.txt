@@ -3,4 +3,4 @@ project(lab5)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(lab5 main.cpp NodeBST.cpp NodeBST.h TreeBST.cpp TreeBST.h)
+add_executable(lab5 main.cpp List.h)
