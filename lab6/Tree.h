@@ -19,10 +19,6 @@ private:
     double diameter;
     int age;
 
-    std::string get_key() const {
-        return type + std::to_string(age);
-    }
-
     static std::string random_type();
 
     static double random_diameter();
@@ -36,6 +32,10 @@ public:
 
     bool operator<(const Tree &other) const {
         return get_key() < other.get_key();
+    }
+
+    std::string get_key() const {
+        return type + std::to_string(age);
     }
 
     std::string get_type() const {

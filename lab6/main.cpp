@@ -13,7 +13,7 @@ int main() {
 
     std::vector<Tree> v_trees;
     std::set<Tree> s_trees;
-    std::map<int, Tree> m_trees;
+    std::map<std::string, Tree> m_trees;
 
     for (int i = 0; i < size - 1; ++i) {
         v_trees.emplace_back();
@@ -32,8 +32,8 @@ int main() {
         }
     }
 
-    for (int i = 0; i < v_trees.size(); ++i) {
-        m_trees[i] = v_trees[i];
+    for (auto & v_tree : v_trees) {
+        m_trees[v_tree.get_key()] = v_tree;
     }
 
     for (auto const&[key, val] : m_trees) {
