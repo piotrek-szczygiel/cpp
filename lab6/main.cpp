@@ -3,71 +3,92 @@
 #include <set>
 #include <map>
 #include <iomanip>
-#include "Tree.h"
+#include "Person.h"
 #include "Random.h"
 
 int main() {
     random_seed();
 
-    const int size = 10;
+    const int size = 5;
 
-    std::vector<Tree> v_trees;
-    std::set<Tree> s_trees;
-    std::map<std::string, Tree> m_trees;
+    std::vector<Person> v_people;
+    std::set<Person> s_people;
+    std::map<std::string, Person> m_people;
 
     for (int i = 0; i < size - 1; ++i) {
-        v_trees.emplace_back();
+        v_people.emplace_back();
     }
 
     // create duplicate
-    v_trees.push_back(v_trees[0]);
+    v_people.push_back(v_people[0]);
 
-    for (auto const &t : v_trees) {
-        std::cout << "vector: " << t.info() << std::endl;
+    for (auto it = v_people.begin(); it != v_people.end(); ++it) {
+        std::cout << "vector: " << it->info() << std::endl;
     }
 
-    for (auto const &t : v_trees) {
-        if (!s_trees.insert(t).second) {
-            std::cout << "set duplicate: " << t.info() << std::endl;
+    for (auto const &p : v_people) {
+        if (!s_people.insert(p).second) {
+            std::cout << "set duplicate: " << p.info() << std::endl;
         }
     }
 
-    for (auto & v_tree : v_trees) {
-        m_trees[v_tree.get_key()] = v_tree;
+    for (auto &v_tree : v_people) {
+        m_people[v_tree.get_key()] = v_tree;
     }
 
-    for (auto const&[key, val] : m_trees) {
+    for (auto const&[key, val] : m_people) {
         std::cout << "map[" << key << "]: " << val.info() << std::endl;
     }
 
-    std::vector<Tree> g_trees(25);
-    std::generate(g_trees.begin(), g_trees.end(), Tree::generator);
+    std::vector<Person> g(20);
+    std::generate(g.begin(), g.end(), Person::generator);
 
-    for (auto const &t : g_trees) {
-        std::cout << "gen: " << t.info() << std::endl;
+    for (auto const &p : g) {
+        std::cout << "gen: " << p.info() << std::endl;
     }
 
-    std::cout << "min_element: "
-              << std::min_element(g_trees.begin(), g_trees.end(), Tree::compare_diameter)->info() << std::endl;
+    auto find_result = std::find_if(g.begin(), g.end(),
+                                    [](const Person &p) { return p.birth_year == 2000; });
 
-
-    std::string type = "Elm";
-    std::cout << "number of " << type << " elements: " << std::count_if(g_trees.begin(), g_trees.end(),
-                                                                        [&type](const Tree &t) {
-                                                                            return t.get_type() == type;
-                                                                        }) << std::endl;
-
-    std::cout << "increasing diameter" << std::endl;
-    std::for_each(g_trees.begin(), g_trees.end(), [](Tree &t) { t.increase_diameter(0.1); });
-    for (auto const &t : g_trees) {
-        std::cout << "gen: " << t.info() << std::endl;
+    if (find_result != g.end()) {
+        std::cout << "find_if: " << find_result->info() << std::endl;
+    } else {
+        std::cout << "find_if: no results" << std::endl;
     }
 
-    std::cout << "removing trees" << std::endl;
-    g_trees.erase(std::remove_if(g_trees.begin(), g_trees.end(), [](const Tree &t) { return t.get_diameter() > 1.0; }),
-                  g_trees.end());
-    for (auto const &t : g_trees) {
-        std::cout << "gen: " << t.info() << std::endl;
+    std::cout << "enter birth year to count: ";
+    int birth_year;
+    std::cin >> birth_year;
+
+    std::cout << "people born in " << birth_year << ": "
+              << std::count_if(g.begin(), g.end(), [birth_year](const Person &p) { return p.birth_year == birth_year; })
+              << std::endl;
+
+    std::sort(g.begin(), g.end(), [](const Person &a, const Person &b) {
+        if (a.birth_year != b.birth_year) {
+            return a.birth_year < b.birth_year;
+        }
+
+        return a.last_name < b.last_name;
+    });
+
+    std::cout << "sorted: " << std::endl;
+    for (auto const &p : g) {
+        std::cout << p.info() << std::endl;
+    }
+
+    std::sort(g.begin(), g.end(), [](const Person &a, const Person &b) {
+        return a.last_name < b.last_name;
+    });
+
+    auto last = std::unique(g.begin(), g.end(), [](const Person &a, const Person &b) {
+        return a.last_name == b.last_name;
+    });
+    g.erase(last, g.end());
+
+    std::cout << "unique: " << std::endl;
+    for (auto const &p : g) {
+        std::cout << p.info() << std::endl;
     }
 
     return 0;
